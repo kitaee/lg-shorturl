@@ -15,7 +15,7 @@ public class UrlMapping {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 2083) // 일반적인 브라우저 URL 최대 길이
     private String oriUrl;
 
     @Column(nullable = false, unique = true, length = 8)
