@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -80,5 +82,21 @@ class UrlMappingServiceTest {
         assertThatThrownBy(() -> urlMappingService.getOriUrl(NON_EXISTING_SHORT_URL))
                 .isInstanceOf(UrlNotFoundException.class)
                 .hasMessage("존재하지 않는 URL 입니다.");
+    }
+
+    @Test
+    @DisplayName("등록된 모든 URL을 조회할 수 있다.")
+    void returnAllUrls() {
+        // given
+        urlMappingService.shortenUrl(ORI_URL_CASE1);
+        urlMappingService.shortenUrl(ORI_URL_CASE2);
+
+        // when
+        List<UrlMappingResponse> allUrlMappings = urlMappingService.getAllUrlMappings();
+
+        // then
+        assertThat(allUrlMappings).hasSize(2)
+                .extracting(UrlMappingResponse::getOriUrl)
+                .containsExactlyInAnyOrder(ORI_URL_CASE1, ORI_URL_CASE2);
     }
 }
