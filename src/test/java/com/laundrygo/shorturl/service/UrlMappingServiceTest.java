@@ -42,4 +42,17 @@ class UrlMappingServiceTest {
         assertThat(urlMappingResponse1.getShortUrl()).isEqualTo(urlMappingResponse2.getShortUrl());
     }
 
+    @Test
+    @DisplayName("shortUrl을 입력하면 oriUrl이 반환된다.")
+    void returnOriUrlForGivenShortUrl() {
+        // given
+        UrlMappingResponse urlMappingResponse = urlMappingService.shortenUrl(ORI_URL_CASE1);
+        String shortUrl = urlMappingResponse.getShortUrl();
+
+        // when
+        UrlMappingResponse oriUrlResponse = urlMappingService.getOriUrl(shortUrl);
+
+        // then
+        assertThat(oriUrlResponse.getOriUrl()).isEqualTo(ORI_URL_CASE1);
+    }
 }
