@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/url")
@@ -24,5 +26,10 @@ public class UrlMappingController {
     @GetMapping("/{shortUrl}")
     public ResponseEntity<UrlMappingResponse> getOriUrl(@PathVariable("shortUrl") String shortUrl) {
         return new ResponseEntity<>(urlMappingService.getOriUrl(shortUrl), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<UrlMappingResponse>> getAllUrls() {
+        return new ResponseEntity<>(urlMappingService.getAllUrlMappings(), HttpStatus.OK);
     }
 }

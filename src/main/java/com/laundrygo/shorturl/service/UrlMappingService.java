@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -32,6 +35,13 @@ public class UrlMappingService {
                     return UrlMappingResponse.of(urlMapping);
                 })
                 .orElseThrow(() -> new UrlNotFoundException("존재하지 않는 URL 입니다."));
+    }
+
+    public List<UrlMappingResponse> getAllUrlMappings() {
+        List<UrlMapping> urlMappings = urlMappingRepository.findAll();
+        return urlMappings.stream()
+                .map(UrlMappingResponse::of)
+                .collect(Collectors.toList());
     }
 
     private UrlMapping createShortUrl(String oriUrl) {
