@@ -35,4 +35,8 @@ public class UrlMapping {
                 .shortUrl(shortUrl)
                 .build();
     }
+
+    public void increaseRequestCount() {
+        this.requestCount+=1;
+    }
 }

@@ -7,10 +7,7 @@ import com.laundrygo.shorturl.service.UrlMappingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,5 +19,10 @@ public class UrlMappingController {
     @PostMapping("/shorten")
     public ResponseEntity<UrlMappingResponse> shortenUrl(@RequestBody UrlMappingRequest urlMappingRequest) {
         return new ResponseEntity<>(urlMappingService.shortenUrl(urlMappingRequest.getOriUrl()), HttpStatus.OK);
+    }
+
+    @GetMapping("/{shortUrl}")
+    public ResponseEntity<UrlMappingResponse> getOriUrl(@PathVariable("shortUrl") String shortUrl) {
+        return new ResponseEntity<>(urlMappingService.getOriUrl(shortUrl), HttpStatus.OK);
     }
 }

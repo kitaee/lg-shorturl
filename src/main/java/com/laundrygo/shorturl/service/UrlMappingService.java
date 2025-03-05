@@ -2,6 +2,7 @@ package com.laundrygo.shorturl.service;
 
 import com.laundrygo.shorturl.domain.UrlMapping;
 import com.laundrygo.shorturl.dto.response.UrlMappingResponse;
+import com.laundrygo.shorturl.exception.UrlNotFoundException;
 import com.laundrygo.shorturl.repository.UrlMappingRepository;
 import com.laundrygo.shorturl.utils.Base62Util;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,16 @@ public class UrlMappingService {
         return urlMappingRepository.findByOriUrl(oriUrl)
                 .map(UrlMappingResponse::of)
                 .orElseGet(() -> UrlMappingResponse.of(createShortUrl(oriUrl)));
+    }
+
+    @Transactional
+    public UrlMappingResponse getOriUrl(String shortUrl) {
+        return urlMappingRepository.findByShortUrl(shortUrl)
+                .map(urlMapping -> {
+                    urlMapping.increaseRequestCount();
+                    return UrlMappingResponse.of(urlMapping);
+                })
+                .orElseThrow(() -> new UrlNotFoundException("존재하지 않는 URL 입니다."));
     }
 
     private UrlMapping createShortUrl(String oriUrl) {
