@@ -55,4 +55,19 @@ class UrlMappingServiceTest {
         // then
         assertThat(oriUrlResponse.getOriUrl()).isEqualTo(ORI_URL_CASE1);
     }
+
+    @Test
+    @DisplayName("shortUrl을 요청할 때마다 요청 수가 증가한다.")
+    void increaseRequestCountWhenShortUrlIsRequested() {
+        // given
+        UrlMappingResponse urlMappingResponse = urlMappingService.shortenUrl(ORI_URL_CASE1);
+        String shortUrl = urlMappingResponse.getShortUrl();
+
+        // when
+        int firstRequestCount = urlMappingService.getOriUrl(shortUrl).getRequestCount();
+        int secondRequestCount = urlMappingService.getOriUrl(shortUrl).getRequestCount();
+
+        // then
+        assertThat(secondRequestCount).isEqualTo(firstRequestCount + 1);
+    }
 }
