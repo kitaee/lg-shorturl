@@ -1,6 +1,7 @@
 package com.laundrygo.shorturl.service;
 
 import com.laundrygo.shorturl.dto.response.UrlMappingResponse;
+import com.laundrygo.shorturl.exception.UrlNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ class UrlMappingServiceTest {
     private final int MAX_URL_LENGTH = 8;
     private final String ORI_URL_CASE1 = "www.laundrygo.com";
     private final String ORI_URL_CASE2 = "https://www.google.com/search?sca_esv=b36f55d2b2433671&sxsrf=AHTn8zqy3IVIPnXkdxT92tdhrs-rI-WGLQ:1741162188656&q=%EB%8D%B0%EB%A6%AD%EB%A1%9C%EC%A6%88&udm=2&fbs=ABzOT_CZsxZeNKUEEOfuRMhc2yCI6hbTw9MNVwGCzBkHjFwaK53DgNHTMxn53_XGiUHS2MuRVDP60KUbqm2OQomhT296Q8j4L9BFGBcQ0mIumXcz3DgnMKIN4okONZJWPQBn6qu6-f5xKhuWNQuih9pjdwrNxkE8JHLZEUrgZby4Wb03L9vR-od6tS-BHqThHLL_jbs4_Fis&sa=X&ved=2ahUKEwie9YDOvvKLAxVgj68BHcWOKF0QtKgLegQIGxAB&biw=1920&bih=1078#vhid=uXQ3JohJIhIlCM&vssid=mosaic"; // 매우 긴 케이스
+    private static final String NON_EXISTING_SHORT_URL = "nonExistUrl";
 
     @Test
     @DisplayName("oriUrl을 입력하면 8글자 이내의 shortUrl이 생성된다.")
@@ -69,5 +71,14 @@ class UrlMappingServiceTest {
 
         // then
         assertThat(secondRequestCount).isEqualTo(firstRequestCount + 1);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 shortUrl을 요청하면 404 오류를 반환한다.")
+    void shouldThrowNotFoundForNonExistingShortUrl() {
+        // given, when, then
+        assertThatThrownBy(() -> urlMappingService.getOriUrl(NON_EXISTING_SHORT_URL))
+                .isInstanceOf(UrlNotFoundException.class)
+                .hasMessage("존재하지 않는 URL 입니다.");
     }
 }
