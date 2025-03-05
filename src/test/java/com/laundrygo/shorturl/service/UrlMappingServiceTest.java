@@ -31,4 +31,15 @@ class UrlMappingServiceTest {
         assertThat(urlMappingResponse2.getShortUrl()).hasSizeLessThanOrEqualTo(MAX_URL_LENGTH);
     }
 
+    @Test
+    @DisplayName("같은 oriUrl에 대해 동일한 shortUrl이 반환된다.")
+    void shortenSameShortUrlForSameOriUrl() {
+        // given, when
+        UrlMappingResponse urlMappingResponse1 = urlMappingService.shortenUrl(ORI_URL_CASE1);
+        UrlMappingResponse urlMappingResponse2 = urlMappingService.shortenUrl(ORI_URL_CASE1);
+
+        // then
+        assertThat(urlMappingResponse1.getShortUrl()).isEqualTo(urlMappingResponse2.getShortUrl());
+    }
+
 }
